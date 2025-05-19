@@ -1,6 +1,17 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCLuE8PiSBQaDQkoYfSr7HVZiUELjOOwo0",
@@ -15,5 +26,69 @@ const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+// Kullanıcı kaydet
+export const registerUser = async (email, password) => {
+  const userCredential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+  const uid = userCredential.user.uid;
+
+  // Firestore'da kullanıcı belgesi oluştur
+  await setDoc(doc(db, "users", uid), {
+    email: email,
+    likedMovies: [],
+  });
+
+  return userCredential.user;
+};
+
+// Kullanıcıyı giriş yaptır
+export const loginUser = async (email, password) => {
+  const userCredential = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+  return userCredential.user;
+};
+
+// Oturumdan çıkış
+export const logoutUser = async () => {
+  await signOut(auth);
+};
+
+// Kullanıcının beğendiği filmleri al
+export const getLikedMovies = async (uid) => {
+  const docRef = doc(db, "users", uid);
+  const docSnap = await getDoc(docRef);
+  return docSnap.exists() ? docSnap.data().likedMovies : [];
+};
+
+// Filme beğeni ekle
+export const addLikedMovie = async (uid, movie) => {
+  const docRef = doc(db, "users", uid);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    const prev = docSnap.data().likedMovies || [];
+    await updateDoc(docRef, {
+      likedMovies: [...prev, movie],
+    });
+  }
+};
+
+// Film beğenisini kaldır
+export const removeLikedMovie = async (uid, movieId) => {
+  const docRef = doc(db, "users", uid);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    const updated = docSnap.data().likedMovies.filter((m) => m.id !== movieId);
+    await updateDoc(docRef, {
+      likedMovies: updated,
+    });
+  }
+};
 
 export { auth, db };

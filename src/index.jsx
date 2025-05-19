@@ -6,7 +6,6 @@ export default function App() {
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-      {/* Buraya Navigation eklenecek */}
     </View>
   );
 }

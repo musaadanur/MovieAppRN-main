@@ -9,6 +9,7 @@
     "start": "react-native start"
   },
   "dependencies": {
+    "firebase": "^11.7.3",
     "react": "19.0.0",
     "react-native": "0.79.1"
   },

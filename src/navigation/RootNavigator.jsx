@@ -4,6 +4,7 @@ import AuthStack from "./AuthStack";
 import MainTabs from "./MainTabs";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../services/firebase";
+
 import { ActivityIndicator, View } from "react-native";
 import colors from "../theme/colors";
 

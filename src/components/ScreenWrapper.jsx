@@ -1,23 +1,22 @@
-import React from "react";
-import { View, StatusBar, StyleSheet } from "react-native";
-import colors from "../theme/colors";
+import React from 'react'
+import { SafeAreaView, StatusBar, StyleSheet } from 'react-native'
+import colors from '../theme/colors'
 
 const ScreenWrapper = ({ children }) => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
       {children}
-    </View>
-  );
-};
+    </SafeAreaView>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    paddingHorizontal: 20,
-    justifyContent: "center",
+    paddingHorizontal: 10,
   },
-});
+})
 
-export default ScreenWrapper;
+export default ScreenWrapper

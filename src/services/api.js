@@ -24,3 +24,10 @@ export const fetchMovieCredits = async (movieId) => {
   )
   return response.data
 }
+
+export const searchMovies = async (query) => {
+  const response = await axios.get(
+    `https://api.themoviedb.org/3/search/movie?query=${query}&api_key=${API_KEY}`
+  )
+  return response.data.results
+}

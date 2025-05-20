@@ -1,8 +1,7 @@
 import React from "react"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import HomeStack from "./HomeStack"
-import FavoritesScreen from "../screens/FavoritesScreen"
-import SearchScreen from "../screens/SearchScreen"
+import SearchStack from "./SearchStack";
 import ProfileScreen from "../screens/ProfileScreen"
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import FavoritesStack from "./FavoritesStack";
@@ -47,8 +46,7 @@ const MainTabs = () => {
     >
       <Tab.Screen name="Home" component={HomeStack} />
       <Tab.Screen name="Favorites" component={FavoritesStack} />
-
-      <Tab.Screen name="Search" component={SearchScreen} />
+      <Tab.Screen name="Search" component={SearchStack} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   )

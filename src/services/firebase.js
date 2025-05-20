@@ -71,8 +71,13 @@ export const getLikedMovies = async (uid) => {
 export const addLikedMovie = async (uid, movie) => {
   const docRef = doc(db, "users", uid);
   const docSnap = await getDoc(docRef);
+
   if (docSnap.exists()) {
     const prev = docSnap.data().likedMovies || [];
+
+    const alreadyExists = prev.some((m) => m.id === movie.id);
+    if (alreadyExists) return;
+
     await updateDoc(docRef, {
       likedMovies: [...prev, movie],
     });

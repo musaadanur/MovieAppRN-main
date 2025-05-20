@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { loginUser } from "../services/firebase";
 import colors from "../theme/colors";
 
+
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

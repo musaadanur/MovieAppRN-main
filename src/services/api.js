@@ -13,3 +13,14 @@ export const fetchPopularMovies = async () => {
   );
   return response.data.results;
 };
+export const fetchMovieDetails = async (id) => {
+  const response = await api.get(`/movie/${id}?api_key=${API_KEY}&language=en-US`)
+  return response.data
+}
+
+export const fetchMovieCredits = async (movieId) => {
+  const response = await axios.get(
+    `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${API_KEY}`
+  )
+  return response.data
+}

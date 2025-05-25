@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Modal, FlatList, StyleSheet } from "react-native";
 import colors from "../theme/colors";
 import { fetchGenres } from "../services/api";
-import Button from "./Button"; // senin özel buton bileşenin
+import Button from "./Button"; 
 
 const ratings = ["9+", "8+", "7+", "6+", "5+", "4+", "3+", "2+", "1+"];
 

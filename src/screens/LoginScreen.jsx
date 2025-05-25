@@ -1,33 +1,53 @@
 import React, { useState } from "react";
 import { Text, Alert, TouchableOpacity, StyleSheet } from "react-native";
+import { useDispatch } from "react-redux";
 import InputField from "../components/InputField";
-import Button from "../components/Button"; // yeni tekil buton bileşeni
+import Button from "../components/Button";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { useNavigation } from "@react-navigation/native";
 import { loginUser } from "../services/firebase";
 import colors from "../theme/colors";
+import {
+  loginStart,
+  loginSuccess,
+  loginFailure,
+} from "../state/slices/authSlice";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert("Hata", "Lütfen tüm alanları doldurun.");
+      Alert.alert("Error", "Please fill in all fields.");
       return;
     }
 
     try {
-      await loginUser(email, password);
+      dispatch(loginStart());
+      const user = await loginUser(email, password);
+
+      // Serialize Firebase user object
+      const serializedUser = {
+        uid: user.uid,
+        email: user.email,
+        emailVerified: user.emailVerified,
+        isAnonymous: user.isAnonymous,
+      };
+
+      dispatch(loginSuccess(serializedUser));
     } catch (error) {
-      Alert.alert("Giriş Hatası", error.message);
+      console.error("Login Error:", error);
+      dispatch(loginFailure(error.message));
+      Alert.alert("Login Error", error.message);
     }
   };
 
   return (
     <ScreenWrapper>
-      <Text style={styles.title}>Giriş Yap</Text>
+      <Text style={styles.title}>Login</Text>
 
       <InputField
         placeholder="Email"
@@ -37,18 +57,18 @@ const LoginScreen = () => {
       />
 
       <InputField
-        placeholder="Şifre"
+        placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
 
-      <Button title="Giriş Yap" onPress={handleLogin} type="primary" />
+      <Button title="Login" onPress={handleLogin} type="primary" />
 
       <TouchableOpacity onPress={() => navigation.popTo("Register")}>
         <Text style={styles.link}>
-          Hesabın yok mu?{" "}
-          <Text style={{ color: colors.secondary }}>Kayıt ol</Text>
+          Don't have an account?{" "}
+          <Text style={{ color: colors.secondary }}>Register</Text>
         </Text>
       </TouchableOpacity>
     </ScreenWrapper>

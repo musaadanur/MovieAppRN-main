@@ -12,6 +12,7 @@ import {
   FlatList,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchMovieDetails, fetchMovieCredits } from "../services/api";
 import {
   addLikedMovie,
@@ -21,14 +22,26 @@ import {
 import { auth } from "../services/firebase";
 import colors from "../theme/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import {
+  setSelectedMovie,
+  fetchMoviesStart,
+  fetchMoviesSuccess,
+  fetchMoviesFailure,
+} from "../state/slices/movieSlice";
+import {
+  addToFavorites,
+  removeFromFavorites,
+} from "../state/slices/favoriteSlice";
 
 let lastTap = 0;
 
 const MovieDetailScreen = () => {
-  const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [liked, setLiked] = useState(false);
   const [cast, setCast] = useState([]);
+  const dispatch = useDispatch();
+  const { selectedMovie: movie } = useSelector((state) => state.movies);
+  const { favorites } = useSelector((state) => state.favorites);
+  const liked = movie ? favorites.some((fav) => fav.id === movie.id) : false;
 
   const route = useRoute();
   const { movieId } = route.params;
@@ -36,12 +49,15 @@ const MovieDetailScreen = () => {
   useEffect(() => {
     const loadDetails = async () => {
       try {
+        dispatch(fetchMoviesStart());
         const data = await fetchMovieDetails(movieId);
-        setMovie(data);
+        dispatch(setSelectedMovie(data));
         const credits = await fetchMovieCredits(movieId);
         setCast(credits.cast?.slice(0, 10) || []);
+        dispatch(fetchMoviesSuccess({ results: [], page: 1, total_pages: 1 }));
       } catch (error) {
         console.error("Movie detail error:", error);
+        dispatch(fetchMoviesFailure(error.message));
       } finally {
         setLoading(false);
       }
@@ -50,19 +66,6 @@ const MovieDetailScreen = () => {
     loadDetails();
   }, []);
 
-  useEffect(() => {
-    const checkIfLiked = async () => {
-      const uid = auth.currentUser?.uid;
-      if (!uid || !movie) return;
-
-      const likedList = await getLikedMovies(uid);
-      const alreadyLiked = likedList.some((m) => m.id === movie.id);
-      setLiked(alreadyLiked);
-    };
-
-    if (movie) checkIfLiked();
-  }, [movie]);
-
   const handleLike = async () => {
     const uid = auth.currentUser?.uid;
     if (!uid || !movie) return;
@@ -70,17 +73,18 @@ const MovieDetailScreen = () => {
     try {
       if (liked) {
         await removeLikedMovie(uid, movie.id);
-        setLiked(false);
+        dispatch(removeFromFavorites(movie.id));
       } else {
-        await addLikedMovie(uid, {
+        const movieData = {
           id: movie.id,
           title: movie.title,
           poster_path: movie.poster_path,
           release_date: movie.release_date,
           genre_ids: movie.genres?.map((g) => g.id) || [],
           vote_average: movie.vote_average,
-        });
-        setLiked(true);
+        };
+        await addLikedMovie(uid, movieData);
+        dispatch(addToFavorites(movieData));
       }
     } catch (error) {
       Alert.alert("Hata", "İşlem sırasında hata oluştu.");

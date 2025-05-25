@@ -1,88 +1,77 @@
-import React from 'react'
+import React, { useState } from "react";
 import {
   View,
   TextInput,
   TouchableOpacity,
   StyleSheet,
   Text,
-} from 'react-native'
-import colors from '../theme/colors'
+} from "react-native";
+import colors from "../theme/colors";
 
-const SearchBar = ({ query, setQuery, onSearch, onClear }) => {
+const SearchBar = ({ onSearch, onClear }) => {
+  const [query, setQuery] = useState("");
+
+  const handleSearch = () => {
+    if (query.trim()) {
+      onSearch(query);
+    }
+  };
+
+  const handleClear = () => {
+    setQuery("");
+    onClear();
+  };
+
   return (
     <View style={styles.searchRow}>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Film ara..."
+          placeholder="Search movies..."
           placeholderTextColor={colors.mutedText}
           value={query}
           onChangeText={(text) => {
-            setQuery(text)
-            if (text.trim() === '') onClear()
+            setQuery(text);
+            if (text.trim() === "") onClear();
           }}
-          returnKeyType="search"
-          onSubmitEditing={onSearch}
+          onSubmitEditing={handleSearch}
         />
         {query.length > 0 && (
-          <TouchableOpacity
-            onPress={() => {
-              setQuery('')
-              onClear()
-            }}
-          >
-            <Text style={styles.clearText}>X</Text>
+          <TouchableOpacity onPress={handleClear}>
+            <Text style={styles.clearText}>✕</Text>
           </TouchableOpacity>
         )}
       </View>
-
-      {query.length > 0 && (
-        <TouchableOpacity onPress={onSearch} style={styles.searchButton}>
-          <Text style={styles.searchButtonText}>Ara</Text>
-        </TouchableOpacity>
-      )}
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   searchRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 12,
-    marginBottom: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
   inputContainer: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.border,
-    borderRadius: 10,
+    borderRadius: 8,
     paddingHorizontal: 12,
+    height: 40,
   },
   input: {
     flex: 1,
     color: colors.text,
     fontSize: 16,
-    paddingVertical: 10,
   },
   clearText: {
-    color: colors.secondary,
-    fontWeight: 'bold',
-    marginLeft: 8,
+    color: colors.mutedText,
     fontSize: 16,
+    padding: 4,
   },
-  searchButton: {
-    marginLeft: 8,
-    backgroundColor: colors.secondary,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 10,
-  },
-  searchButtonText: {
-    color: colors.background,
-    fontWeight: 'bold',
-  },
-})
+});
 
-export default SearchBar
+export default SearchBar;

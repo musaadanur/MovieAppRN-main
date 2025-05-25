@@ -1,161 +1,142 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
-  FlatList,
-  Alert,
   Text,
-  TouchableOpacity,
   StyleSheet,
-  Platform,
-  ToastAndroid,
+  FlatList,
+  TouchableOpacity,
+  Dimensions,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { useFocusEffect } from "@react-navigation/native";
 import { getLikedMovies, removeLikedMovie } from "../services/firebase";
-import { auth } from "../services/firebase";
+import {
+  fetchFavoritesStart,
+  fetchFavoritesSuccess,
+  fetchFavoritesFailure,
+  removeFromFavorites,
+} from "../state/slices/favoriteSlice";
+import colors from "../theme/colors";
 import MovieCard from "../components/MovieCard";
 import ScreenWrapper from "../components/ScreenWrapper";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import colors from "../theme/colors";
+import SearchBar from "../components/SearchBar";
 import SearchFilterSelector from "../components/SearchFilterSelector";
 import GenreAndRatingSelector from "../components/GenreAndRatingSelector";
-import SearchBar from "../components/SearchBar";
-import { searchMovies } from "../services/api";
 
-const FavoritesScreen = () => {
-  const navigation = useNavigation();
+const { width } = Dimensions.get("window");
+const CARD_WIDTH = width * 0.43;
+const CARD_HEIGHT = CARD_WIDTH * 1.5;
 
+const FavoritesScreen = ({ navigation }) => {
   const [mode, setMode] = useState("search");
-  const [query, setQuery] = useState("");
-  const [likedMovies, setLikedMovies] = useState([]);
-  const [filtered, setFiltered] = useState([]);
-
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [selectedRatings, setSelectedRatings] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [filteredMovies, setFilteredMovies] = useState([]);
+  const dispatch = useDispatch();
+  const { favorites, loading } = useSelector((state) => state.favorites);
+  const { user } = useSelector((state) => state.auth);
 
   useFocusEffect(
     React.useCallback(() => {
-      const fetchLiked = async () => {
-        const uid = auth.currentUser?.uid;
-        if (!uid) return;
-        const liked = await getLikedMovies(uid);
-        setLikedMovies(liked);
-        setFiltered(liked);
-      };
-
-      fetchLiked();
-    }, [])
+      if (user) {
+        loadFavorites();
+      }
+    }, [user])
   );
 
   useEffect(() => {
-    if (mode !== "filter") return setFiltered(likedMovies);
+    if (favorites) {
+      filterMovies();
+    }
+  }, [selectedGenres, selectedRatings, favorites]);
 
-    const genreIds = selectedGenres.map((g) => g.id);
-    const ratingsNumbers = selectedRatings.map((r) =>
-      parseInt(r.replace("+", ""))
-    );
-    const minRating =
-      ratingsNumbers.length > 0 ? Math.min(...ratingsNumbers) : 0;
-
-    const result = likedMovies.filter((movie) => {
-      const matchGenre =
-        genreIds.length === 0 ||
-        (Array.isArray(movie.genre_ids) &&
-          movie.genre_ids.some((id) => genreIds.includes(id)));
-
-      const matchRating =
-        ratingsNumbers.length === 0 || movie.vote_average >= minRating;
-
-      return matchGenre && matchRating;
-    });
-
-    setFiltered(result);
-  }, [likedMovies, selectedGenres, selectedRatings, mode]);
-
-  const handleSearch = async () => {
-    if (!query.trim()) return;
-    setLoading(true);
+  const loadFavorites = async () => {
     try {
-      const results = await searchMovies(query.trim());
-      const likedIds = likedMovies.map((m) => m.id);
-      const matched = results.filter((m) => likedIds.includes(m.id));
-      setFiltered(matched);
+      dispatch(fetchFavoritesStart());
+      const movies = await getLikedMovies(user.uid);
+      dispatch(fetchFavoritesSuccess(movies));
     } catch (error) {
-      console.log("Search error in favorites:", error);
-    } finally {
-      setLoading(false);
+      console.error("Load Favorites Error:", error);
+      dispatch(fetchFavoritesFailure(error.message));
     }
   };
 
-  const handleUnlike = (movie) => {
-    Alert.alert(
-      "Favoriden çıkarılsın mı?",
-      "Bu filmi beğenmekten vazgeçiyorsun. Emin misin?",
-      [
-        { text: "Hayır", style: "cancel" },
-        {
-          text: "Evet",
-          onPress: async () => {
-            const uid = auth.currentUser?.uid;
-            await removeLikedMovie(uid, movie.id);
-            setLikedMovies((prev) => prev.filter((m) => m.id !== movie.id));
-            setFiltered((prev) => prev.filter((m) => m.id !== movie.id));
-            if (Platform.OS === "android") {
-              ToastAndroid.show("Favorilerden kaldırıldı", ToastAndroid.SHORT);
-            }
-          },
-        },
-      ]
-    );
-  };
+  const filterMovies = () => {
+    let filtered = [...favorites];
 
-  const dataWithPlaceholder =
-    filtered.length % 2 === 1
-      ? [...filtered, { isPlaceholder: true, id: "placeholder" }]
-      : filtered;
-
-  const renderItem = ({ item }) => {
-    if (item.isPlaceholder) {
-      return (
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Home")}
-          style={styles.placeholder}
-        >
-          <Text style={styles.placeholderText}>
-            + Beğenebileceğin filmleri keşfet
-          </Text>
-        </TouchableOpacity>
+    if (selectedGenres.length > 0) {
+      filtered = filtered.filter((movie) =>
+        movie.genre_ids.some((id) =>
+          selectedGenres.some((genre) => genre.id === id)
+        )
       );
     }
 
-    return (
-      <MovieCard
-        movie={item}
-        liked={true}
-        onPress={() => navigation.navigate("MovieDetail", { movieId: item.id })}
-        onToggleLike={() => handleUnlike(item)}
-      />
+    if (selectedRatings.length > 0) {
+      const minRating = Math.min(
+        ...selectedRatings.map((r) => parseInt(r.replace("+", "")))
+      );
+      filtered = filtered.filter((movie) => movie.vote_average >= minRating);
+    }
+
+    setFilteredMovies(filtered);
+  };
+
+  const handleSearch = (query) => {
+    if (!query.trim()) {
+      setFilteredMovies(favorites);
+      return;
+    }
+
+    const filtered = favorites.filter((movie) =>
+      movie.title.toLowerCase().includes(query.toLowerCase())
     );
+    setFilteredMovies(filtered);
+  };
+
+  const handleUnlike = async (movieId) => {
+    try {
+      await removeLikedMovie(user.uid, movieId);
+      dispatch(removeFromFavorites(movieId));
+    } catch (error) {
+      console.error("Unlike Error:", error);
+    }
+  };
+
+  const handleModeChange = (newMode) => {
+    setMode(newMode);
+    setSelectedGenres([]);
+    setSelectedRatings([]);
+  };
+
+  const renderEmptyState = () => {
+    if (loading) {
+      return (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>Loading favorites...</Text>
+        </View>
+      );
+    }
+
+    if (filteredMovies.length === 0) {
+      return (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No movies found</Text>
+        </View>
+      );
+    }
+
+    return null;
   };
 
   return (
     <ScreenWrapper>
-      <SearchFilterSelector
-        mode={mode}
-        setMode={(newMode) => {
-          setMode(newMode);
-          setQuery("");
-          setSelectedGenres([]);
-          setSelectedRatings([]);
-          setFiltered(likedMovies);
-        }}
-      />
+      <SearchFilterSelector mode={mode} setMode={handleModeChange} />
 
       {mode === "search" && (
         <SearchBar
-          query={query}
-          setQuery={setQuery}
           onSearch={handleSearch}
-          onClear={() => setFiltered(likedMovies)}
+          onClear={() => setFilteredMovies(favorites)}
         />
       )}
 
@@ -197,49 +178,34 @@ const FavoritesScreen = () => {
         </>
       )}
 
-      {filtered.length === 0 && (
-        <View style={styles.emptyState}>
-          <Text style={styles.emptyText}>
-            {likedMovies.length === 0
-              ? "Henüz hiç favori film eklemedin."
-              : "Seçtiğin filtrelere uygun film bulunamadı."}
-          </Text>
-        </View>
-      )}
-
       <FlatList
-        data={dataWithPlaceholder}
+        data={filteredMovies}
+        renderItem={({ item }) => (
+          <View style={{ flex: 1, marginHorizontal: 4 }}>
+            <MovieCard
+              movie={item}
+              liked={true}
+              onPress={() =>
+                navigation.navigate("MovieDetail", { movie: item })
+              }
+              onToggleLike={() => handleUnlike(item.id)}
+            />
+          </View>
+        )}
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
+        contentContainerStyle={{ padding: 8 }}
         columnWrapperStyle={{
           justifyContent: "space-between",
           marginBottom: 12,
         }}
-        contentContainerStyle={{ padding: 8 }}
-        renderItem={({ item }) => (
-          <View style={{ flex: 1, marginHorizontal: 4 }}>
-            {renderItem({ item })}
-          </View>
-        )}
+        ListEmptyComponent={renderEmptyState}
       />
     </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
-  placeholder: {
-    aspectRatio: 2 / 3,
-    borderRadius: 12,
-    backgroundColor: colors.border,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  placeholderText: {
-    color: colors.mutedText,
-    fontSize: 12,
-    paddingHorizontal: 8,
-    textAlign: "center",
-  },
   chipsRow: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -257,15 +223,15 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 12,
   },
-  emptyState: {
-    alignItems: "center",
+  emptyContainer: {
+    flex: 1,
     justifyContent: "center",
-    marginVertical: 40,
+    alignItems: "center",
+    padding: 20,
   },
   emptyText: {
     color: colors.mutedText,
-    fontSize: 14,
-    textAlign: "center",
+    fontSize: 16,
   },
 });
 

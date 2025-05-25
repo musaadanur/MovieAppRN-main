@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, ActivityIndicator, View } from "react-native";
+import { FlatList, ActivityIndicator, View, Alert } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchPopularMovies } from "../services/api";
 import ScreenWrapper from "../components/ScreenWrapper";
 import MovieCard from "../components/MovieCard";
@@ -12,57 +13,146 @@ import {
 import { auth } from "../services/firebase";
 import colors from "../theme/colors";
 import { useFocusEffect } from "@react-navigation/native";
+import {
+  fetchMoviesStart,
+  fetchMoviesSuccess,
+  fetchMoviesFailure,
+} from "../state/slices/movieSlice";
+import {
+  fetchFavoritesStart,
+  fetchFavoritesSuccess,
+  fetchFavoritesFailure,
+  addToFavorites,
+  removeFromFavorites,
+} from "../state/slices/favoriteSlice";
+
+const ITEMS_PER_PAGE = 20;
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [movies, setMovies] = useState([]);
-  const [likedMovieIds, setLikedMovieIds] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const loadMovies = async () => {
-        try {
-          const data = await fetchPopularMovies();
-          setMovies(data);
-
-          const uid = auth.currentUser?.uid;
-          if (uid) {
-            const liked = await getLikedMovies(uid);
-            setLikedMovieIds(liked.map((m) => m.id));
-          }
-        } catch (error) {
-          console.error("API Error:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      loadMovies();
-    }, [])
+  const dispatch = useDispatch();
+  const [page, setPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const { movies, loading: moviesLoading } = useSelector(
+    (state) => state.movies
+  );
+  const { favorites, loading: favoritesLoading } = useSelector(
+    (state) => state.favorites
   );
 
-  const handleToggleLike = async (movie) => {
-    const uid = auth.currentUser?.uid;
-    if (!uid) return;
-
-    if (likedMovieIds.includes(movie.id)) {
-      await removeLikedMovie(uid, movie.id);
-      setLikedMovieIds((prev) => prev.filter((id) => id !== movie.id));
-    } else {
-      await addLikedMovie(uid, {
-        id: movie.id,
-        title: movie.title,
-        poster_path: movie.poster_path,
-        release_date: movie.release_date,
-        genre_ids: movie.genre_ids || [], 
-        vote_average: movie.vote_average,
-      });
-      setLikedMovieIds((prev) => [...prev, movie.id]);
+  const loadMovies = async () => {
+    try {
+      dispatch(fetchMoviesStart());
+      const data = await fetchPopularMovies(1);
+      dispatch(fetchMoviesSuccess({ results: data, page: 1, total_pages: 1 }));
+    } catch (error) {
+      console.error("API Error:", error);
+      dispatch(fetchMoviesFailure(error.message));
+      Alert.alert("Hata", "Filmler yüklenirken bir hata oluştu");
     }
   };
 
-  if (loading) {
+  const loadFavorites = async () => {
+    const uid = auth.currentUser?.uid;
+    if (!uid) {
+      console.log("No user ID available");
+      return;
+    }
+
+    try {
+      dispatch(fetchFavoritesStart());
+      const liked = await getLikedMovies(uid);
+      console.log("Loaded favorites:", liked);
+      dispatch(fetchFavoritesSuccess(liked));
+    } catch (error) {
+      console.error("Favorites Error:", error);
+      dispatch(fetchFavoritesFailure(error.message));
+      Alert.alert("Hata", "Favori filmler yüklenirken bir hata oluştu");
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Screen focused, loading data...");
+      loadMovies();
+      loadFavorites();
+    }, [])
+  );
+
+  const loadMoreMovies = async () => {
+    if (loadingMore) return;
+
+    try {
+      setLoadingMore(true);
+      const nextPage = page + 1;
+      const data = await fetchPopularMovies(nextPage);
+
+      if (data.length > 0) {
+        dispatch(
+          fetchMoviesSuccess({
+            results: [...movies, ...data],
+            page: nextPage,
+            total_pages: 1,
+          })
+        );
+        setPage(nextPage);
+      }
+    } catch (error) {
+      console.error("Load More Error:", error);
+      Alert.alert("Hata", "Daha fazla film yüklenirken bir hata oluştu");
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  const handleToggleLike = async (movie) => {
+    const uid = auth.currentUser?.uid;
+    if (!uid) {
+      Alert.alert("Hata", "Lütfen giriş yapın");
+      return;
+    }
+
+    const isLiked = favorites.some((fav) => fav.id === movie.id);
+
+    try {
+      if (isLiked) {
+        await removeLikedMovie(uid, movie.id);
+        dispatch(removeFromFavorites(movie.id));
+        Alert.alert("Başarılı", "Film favorilerden kaldırıldı");
+      } else {
+        const movieData = {
+          id: movie.id,
+          title: movie.title,
+          poster_path: movie.poster_path,
+          release_date: movie.release_date,
+          genre_ids: movie.genre_ids || [],
+          vote_average: movie.vote_average,
+        };
+        await addLikedMovie(uid, movieData);
+        dispatch(addToFavorites(movieData));
+        Alert.alert("Başarılı", "Film favorilere eklendi");
+      }
+    } catch (error) {
+      console.error("Toggle Like Error:", error);
+      Alert.alert(
+        "Hata",
+        error.message || "Film beğenme işlemi sırasında bir hata oluştu"
+      );
+    }
+  };
+
+  const renderFooter = () => {
+    if (!loadingMore) return null;
+    return (
+      <ActivityIndicator
+        size="small"
+        color={colors.text}
+        style={{ marginVertical: 10 }}
+      />
+    );
+  };
+
+  if (moviesLoading || favoritesLoading) {
     return (
       <ScreenWrapper>
         <ActivityIndicator
@@ -84,12 +174,15 @@ const HomeScreen = () => {
           marginBottom: 12,
         }}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={{ paddingBottom: 16 }} // ✅ sadece alta boşluk
+        contentContainerStyle={{ paddingBottom: 16 }}
+        onEndReached={loadMoreMovies}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
         renderItem={({ item }) => (
           <View style={{ flex: 1, marginHorizontal: 4 }}>
             <MovieCard
               movie={item}
-              liked={likedMovieIds.includes(item.id)}
+              liked={favorites.some((fav) => fav.id === item.id)}
               onToggleLike={() => handleToggleLike(item)}
               onPress={() =>
                 navigation.navigate("MovieDetail", { movieId: item.id })

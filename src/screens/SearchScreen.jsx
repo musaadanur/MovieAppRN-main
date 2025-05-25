@@ -8,8 +8,10 @@ import {
   Platform,
   Text,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
 import ScreenWrapper from "../components/ScreenWrapper";
 import MovieCard from "../components/MovieCard";
 import SearchBar from "../components/SearchBar";
@@ -23,27 +25,54 @@ import {
 } from "../services/firebase";
 import { auth } from "../services/firebase";
 import colors from "../theme/colors";
+import {
+  searchMoviesStart,
+  searchMoviesSuccess,
+  searchMoviesFailure,
+  clearSearchResults,
+} from "../state/slices/movieSlice";
+import {
+  fetchFavoritesStart,
+  fetchFavoritesSuccess,
+  fetchFavoritesFailure,
+  addToFavorites,
+  removeFromFavorites,
+} from "../state/slices/favoriteSlice";
+
+const { width } = Dimensions.get("window");
+const CARD_WIDTH = width * 0.43;
+const CARD_HEIGHT = CARD_WIDTH * 1.5;
 
 const SearchScreen = () => {
   const navigation = useNavigation();
-
+  const dispatch = useDispatch();
   const [mode, setMode] = useState("search");
-
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [likedIds, setLikedIds] = useState([]);
-
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [selectedRatings, setSelectedRatings] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  const { searchResults, loading: moviesLoading } = useSelector(
+    (state) => state.movies
+  );
+  const { favorites, loading: favoritesLoading } = useSelector(
+    (state) => state.favorites
+  );
+  const { user } = useSelector((state) => state.auth);
 
   useFocusEffect(
     React.useCallback(() => {
       const fetchLikes = async () => {
         const uid = auth.currentUser?.uid;
         if (!uid) return;
-        const liked = await getLikedMovies(uid);
-        setLikedIds(liked.map((m) => m.id));
+        try {
+          dispatch(fetchFavoritesStart());
+          const liked = await getLikedMovies(uid);
+          dispatch(fetchFavoritesSuccess(liked));
+        } catch (error) {
+          dispatch(fetchFavoritesFailure(error.message));
+        }
       };
 
       fetchLikes();
@@ -53,13 +82,13 @@ const SearchScreen = () => {
   useEffect(() => {
     if (mode !== "filter") return;
     if (selectedGenres.length === 0 && selectedRatings.length === 0) {
-      setResults([]);
+      dispatch(clearSearchResults());
       return;
     }
 
     const fetchFiltered = async () => {
-      setLoading(true);
       try {
+        dispatch(searchMoviesStart());
         const genreIds = selectedGenres.map((g) => g.id).join(",");
         const ratingsNumbers = selectedRatings.map((r) =>
           parseInt(r.replace("+", ""))
@@ -67,66 +96,141 @@ const SearchScreen = () => {
         const minRating =
           ratingsNumbers.length > 0 ? Math.min(...ratingsNumbers) : 0;
 
-        const data = await discoverMovies(genreIds, minRating);
-        setResults(data);
+        const data = await discoverMovies(genreIds, minRating, 1);
+        dispatch(
+          searchMoviesSuccess({ results: data, page: 1, total_pages: 1 })
+        );
+        setPage(1);
       } catch (error) {
         console.log("discover error:", error);
-      } finally {
-        setLoading(false);
+        dispatch(searchMoviesFailure(error.message));
       }
     };
 
     fetchFiltered();
   }, [selectedGenres, selectedRatings, mode]);
 
-  const handleSearch = async () => {
-    if (!query.trim()) return;
-    setLoading(true);
+  const handleSearch = async (searchQuery) => {
     try {
-      const data = await searchMovies(query.trim());
-      setResults(data);
+      dispatch(searchMoviesStart());
+      const results = await searchMovies(searchQuery);
+      dispatch(
+        searchMoviesSuccess({ results: results, page: 1, total_pages: 1 })
+      );
+      setPage(1);
     } catch (error) {
-      console.log("search error:", error);
+      console.error("Search Error:", error);
+      dispatch(searchMoviesFailure(error.message));
+    }
+  };
+
+  const loadMore = async () => {
+    if (loadingMore || !searchResults.length) return;
+
+    try {
+      setLoadingMore(true);
+      const nextPage = page + 1;
+      let data;
+
+      if (mode === "search") {
+        data = await searchMovies(query.trim(), nextPage);
+      } else {
+        const genreIds = selectedGenres.map((g) => g.id).join(",");
+        const ratingsNumbers = selectedRatings.map((r) =>
+          parseInt(r.replace("+", ""))
+        );
+        const minRating =
+          ratingsNumbers.length > 0 ? Math.min(...ratingsNumbers) : 0;
+        data = await discoverMovies(genreIds, minRating, nextPage);
+      }
+
+      if (data.length > 0) {
+        dispatch(
+          searchMoviesSuccess({
+            results: [...searchResults, ...data],
+            page: nextPage,
+            total_pages: 1,
+          })
+        );
+        setPage(nextPage);
+      }
+    } catch (error) {
+      console.error("Load More Error:", error);
     } finally {
-      setLoading(false);
+      setLoadingMore(false);
     }
   };
 
   const toggleLike = async (movie) => {
-    const uid = auth.currentUser?.uid;
-    if (!uid) return;
-
-    const isLiked = likedIds.includes(movie.id);
-
-    if (isLiked) {
-      await removeLikedMovie(uid, movie.id);
-      setLikedIds((prev) => prev.filter((id) => id !== movie.id));
-    } else {
-      await addLikedMovie(uid, {
-        id: movie.id,
-        title: movie.title,
-        poster_path: movie.poster_path,
-        release_date: movie.release_date,
-        genre_ids: movie.genre_ids || [],
-        vote_average: movie.vote_average,
-      });
-      setLikedIds((prev) => [...prev, movie.id]);
+    if (!user) {
+      navigation.navigate("Login");
+      return;
     }
 
-    if (Platform.OS === "android") {
-      ToastAndroid.show(
-        isLiked ? "Beğeni kaldırıldı" : "Film beğenildi",
-        ToastAndroid.SHORT
-      );
+    const isLiked = favorites.some((fav) => fav.id === movie.id);
+
+    try {
+      if (isLiked) {
+        await removeLikedMovie(user.uid, movie.id);
+        dispatch(removeFromFavorites(movie.id));
+      } else {
+        await addLikedMovie(user.uid, movie);
+        dispatch(addToFavorites(movie));
+      }
+
+      if (Platform.OS === "android") {
+        ToastAndroid.show(
+          isLiked ? "Beğeni kaldırıldı" : "Film beğenildi",
+          ToastAndroid.SHORT
+        );
+      }
+    } catch (error) {
+      console.error("Toggle Like Error:", error);
     }
   };
 
   const handleModeChange = (newMode) => {
     setMode(newMode);
     setQuery("");
-    setResults([]);
+    dispatch(clearSearchResults());
     setSelectedGenres([]);
     setSelectedRatings([]);
+    setPage(1);
+  };
+
+  const renderFooter = () => {
+    if (!loadingMore) return null;
+    return (
+      <ActivityIndicator
+        size="small"
+        color={colors.text}
+        style={{ marginVertical: 10 }}
+      />
+    );
+  };
+
+  const renderEmptyState = () => {
+    if (moviesLoading) {
+      return (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>Searching...</Text>
+        </View>
+      );
+    }
+
+    if (query && searchResults.length === 0) {
+      return (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No movies found</Text>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>Search for movies</Text>
+      </View>
+    );
   };
 
   return (
@@ -135,10 +239,8 @@ const SearchScreen = () => {
 
       {mode === "search" && (
         <SearchBar
-          query={query}
-          setQuery={setQuery}
           onSearch={handleSearch}
-          onClear={() => setResults([])}
+          onClear={() => dispatch(clearSearchResults())}
         />
       )}
 
@@ -180,11 +282,11 @@ const SearchScreen = () => {
         </>
       )}
 
-      {loading ? (
+      {moviesLoading || favoritesLoading ? (
         <ActivityIndicator size="large" color={colors.text} />
       ) : (
         <FlatList
-          data={results}
+          data={searchResults}
           keyExtractor={(item) => item.id.toString()}
           numColumns={2}
           contentContainerStyle={{ padding: 8 }}
@@ -192,11 +294,15 @@ const SearchScreen = () => {
             justifyContent: "space-between",
             marginBottom: 12,
           }}
+          onEndReached={loadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={renderFooter}
+          ListEmptyComponent={renderEmptyState}
           renderItem={({ item }) => (
             <View style={{ flex: 1, marginHorizontal: 4 }}>
               <MovieCard
                 movie={item}
-                liked={likedIds.includes(item.id)}
+                liked={favorites.some((fav) => fav.id === item.id)}
                 onPress={() =>
                   navigation.navigate("MovieDetail", { movieId: item.id })
                 }
@@ -227,6 +333,16 @@ const styles = StyleSheet.create({
   chipText: {
     color: colors.text,
     fontSize: 12,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  emptyText: {
+    color: colors.mutedText,
+    fontSize: 16,
   },
 });
 

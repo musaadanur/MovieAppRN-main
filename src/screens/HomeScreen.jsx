@@ -1,70 +1,66 @@
-import React, { useEffect, useState } from "react"
-import {
-  FlatList,
-  ActivityIndicator,
-  View
-} from "react-native"
-import { fetchPopularMovies } from "../services/api"
-import ScreenWrapper from "../components/ScreenWrapper"
-import MovieCard from "../components/MovieCard"
-import { useNavigation } from "@react-navigation/native"
+import React, { useEffect, useState } from "react";
+import { FlatList, ActivityIndicator, View } from "react-native";
+import { fetchPopularMovies } from "../services/api";
+import ScreenWrapper from "../components/ScreenWrapper";
+import MovieCard from "../components/MovieCard";
+import { useNavigation } from "@react-navigation/native";
 import {
   addLikedMovie,
   getLikedMovies,
-  removeLikedMovie
-} from "../services/firebase"
-import { auth } from "../services/firebase"
-import colors from "../theme/colors"
+  removeLikedMovie,
+} from "../services/firebase";
+import { auth } from "../services/firebase";
+import colors from "../theme/colors";
 import { useFocusEffect } from "@react-navigation/native";
 
-
 const HomeScreen = () => {
-  const navigation = useNavigation()
-  const [movies, setMovies] = useState([])
-  const [likedMovieIds, setLikedMovieIds] = useState([])
-  const [loading, setLoading] = useState(true)
+  const navigation = useNavigation();
+  const [movies, setMovies] = useState([]);
+  const [likedMovieIds, setLikedMovieIds] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useFocusEffect(
-  React.useCallback(() => {
-    const loadMovies = async () => {
-      try {
-        const data = await fetchPopularMovies()
-        setMovies(data)
+    React.useCallback(() => {
+      const loadMovies = async () => {
+        try {
+          const data = await fetchPopularMovies();
+          setMovies(data);
 
-        const uid = auth.currentUser?.uid
-        if (uid) {
-          const liked = await getLikedMovies(uid)
-          setLikedMovieIds(liked.map((m) => m.id))
+          const uid = auth.currentUser?.uid;
+          if (uid) {
+            const liked = await getLikedMovies(uid);
+            setLikedMovieIds(liked.map((m) => m.id));
+          }
+        } catch (error) {
+          console.error("API Error:", error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error("API Error:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
+      };
 
-    loadMovies()
-  }, [])
-)
-
+      loadMovies();
+    }, [])
+  );
 
   const handleToggleLike = async (movie) => {
-    const uid = auth.currentUser?.uid
-    if (!uid) return
+    const uid = auth.currentUser?.uid;
+    if (!uid) return;
 
     if (likedMovieIds.includes(movie.id)) {
-      await removeLikedMovie(uid, movie.id)
-      setLikedMovieIds((prev) => prev.filter((id) => id !== movie.id))
+      await removeLikedMovie(uid, movie.id);
+      setLikedMovieIds((prev) => prev.filter((id) => id !== movie.id));
     } else {
       await addLikedMovie(uid, {
         id: movie.id,
         title: movie.title,
         poster_path: movie.poster_path,
         release_date: movie.release_date,
-      })
-      setLikedMovieIds((prev) => [...prev, movie.id])
+        genre_ids: movie.genre_ids || [], 
+        vote_average: movie.vote_average,
+      });
+      setLikedMovieIds((prev) => [...prev, movie.id]);
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -75,7 +71,7 @@ const HomeScreen = () => {
           style={{ marginTop: 20 }}
         />
       </ScreenWrapper>
-    )
+    );
   }
 
   return (
@@ -83,9 +79,12 @@ const HomeScreen = () => {
       <FlatList
         data={movies}
         numColumns={2}
-        columnWrapperStyle={{ justifyContent: "space-between", marginBottom: 12 }}
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+          marginBottom: 12,
+        }}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={{ padding: 8 }}
+        contentContainerStyle={{ paddingBottom: 16 }} // ✅ sadece alta boşluk
         renderItem={({ item }) => (
           <View style={{ flex: 1, marginHorizontal: 4 }}>
             <MovieCard
@@ -100,7 +99,7 @@ const HomeScreen = () => {
         )}
       />
     </ScreenWrapper>
-  )
-}
+  );
+};
 
-export default HomeScreen
+export default HomeScreen;

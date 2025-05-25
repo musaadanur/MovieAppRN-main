@@ -1,17 +1,9 @@
 {
-  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "editor.formatOnPaste": false,
-  "editor.formatOnSave": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
   "eslint.format.enable": false,
   "editor.insertSpaces": true,
-  "editor.codeActionsOnSave": {
-    "source.addMissingImports.ts": "never",
-    "source.fixAll.eslint": "never",
-    "source.organizeImports": "never",
-    "source.sortImports": "never",
-    "source.removeUnused.ts": "never",
-    "source.removeUnusedImports": "never"
-  },
   "files.eol": "\n",
   "workbench.tree.indent": 16,
   "workbench.tree.renderIndentGuides": "always",

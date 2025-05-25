@@ -4,25 +4,23 @@ import AuthStack from "./AuthStack";
 import MainTabs from "./MainTabs";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../services/firebase";
-
 import { ActivityIndicator, View } from "react-native";
 import colors from "../theme/colors";
 
 const RootNavigator = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(undefined); 
+  const [initializing, setInitializing] = useState(true);
 
-  // Kullanıcının giriş yapıp yapmadığını dinle
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
-      setLoading(false);
+      if (initializing) setInitializing(false);
     });
 
     return unsubscribe;
-  }, []);
+  }, [initializing]);
 
-  if (loading) {
+  if (initializing) {
     return (
       <View
         style={{
@@ -32,7 +30,7 @@ const RootNavigator = () => {
           backgroundColor: colors.background,
         }}
       >
-        <ActivityIndicator size="large" color="#fff" />
+        <ActivityIndicator size="large" color={colors.text} />
       </View>
     );
   }

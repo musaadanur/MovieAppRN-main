@@ -1,11 +1,11 @@
 import React from "react"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import HomeStack from "./HomeStack"
-import SearchStack from "./SearchStack";
+import SearchStack from "./SearchStack"
 import ProfileScreen from "../screens/ProfileScreen"
+import FavoritesStack from "./FavoritesStack"
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import FavoritesStack from "./FavoritesStack";
-
+import colors from "../theme/colors"
 
 const Tab = createBottomTabNavigator()
 
@@ -14,10 +14,10 @@ const MainTabs = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: "#fff",
-        tabBarInactiveTintColor: "#aaa",
+        tabBarActiveTintColor: colors.secondary,
+        tabBarInactiveTintColor: colors.tabInactive,
         tabBarStyle: {
-          backgroundColor: "#121212",
+          backgroundColor: colors.background,
           borderTopWidth: 0,
         },
         tabBarIcon: ({ color, size }) => {

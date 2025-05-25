@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Text, Alert, TouchableOpacity, StyleSheet } from "react-native";
 import InputField from "../components/InputField";
-import PrimaryButton from "../components/PrimaryButton";
+import Button from "../components/Button";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { useNavigation } from "@react-navigation/native";
 import { registerUser } from "../services/firebase";
@@ -20,7 +20,6 @@ const RegisterScreen = () => {
 
     try {
       await registerUser(email, password);
-      // Kayıt başarılı -> RootNavigator yönlendirecek
     } catch (error) {
       Alert.alert("Kayıt Hatası", error.message);
     }
@@ -44,10 +43,13 @@ const RegisterScreen = () => {
         secureTextEntry
       />
 
-      <PrimaryButton title="Kayıt Ol" onPress={handleRegister} />
+      <Button title="Kayıt Ol" onPress={handleRegister} type="primary" />
 
-      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-        <Text style={styles.link}>Zaten hesabın var mı? Giriş yap</Text>
+      <TouchableOpacity onPress={() => navigation.popTo("Login")}>
+        <Text style={styles.link}>
+          Zaten hesabın var mı?{" "}
+          <Text style={{ color: colors.secondary }}>Giriş yap</Text>
+        </Text>
       </TouchableOpacity>
     </ScreenWrapper>
   );
@@ -55,13 +57,13 @@ const RegisterScreen = () => {
 
 const styles = StyleSheet.create({
   title: {
-    color: "#fff",
+    color: colors.text,
     fontSize: 24,
     marginBottom: 24,
     textAlign: "center",
   },
   link: {
-    color: colors.accent,
+    color: colors.mutedText,
     textAlign: "center",
     marginTop: 12,
   },

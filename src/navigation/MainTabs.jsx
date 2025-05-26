@@ -1,13 +1,18 @@
-import React from "react"
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import HomeStack from "./HomeStack"
-import SearchStack from "./SearchStack"
-import ProfileScreen from "../screens/ProfileScreen"
-import FavoritesStack from "./FavoritesStack"
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import colors from "../theme/colors"
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import HomeStack from "./HomeStack";
+import SearchStack from "./SearchStack";
+import ProfileScreen from "../screens/ProfileScreen";
+import FavoritesStack from "./FavoritesStack";
+import colors from "../theme/colors";
 
-const Tab = createBottomTabNavigator()
+// SVG ikonlar (fill renklerini props ile kontrol edeceğiz)
+import HomeIcon from "../assets/home.svg";
+import SearchIcon from "../assets/search.svg";
+import ProfileIcon from "../assets/profile.svg";
+import FavoriteIcon from "../assets/favorite.svg";
+
+const Tab = createBottomTabNavigator();
 
 const MainTabs = () => {
   return (
@@ -20,27 +25,30 @@ const MainTabs = () => {
           backgroundColor: colors.background,
           borderTopWidth: 0,
         },
-        tabBarIcon: ({ color, size }) => {
-          let iconName
+        tabBarLabelStyle: {
+          fontSize: 12,
+        },
+        tabBarIcon: ({ color }) => {
+          let IconComponent;
 
           switch (route.name) {
             case "Home":
-              iconName = "home-outline"
-              break
+              IconComponent = HomeIcon;
+              break;
             case "Favorites":
-              iconName = "heart-outline"
-              break
+              IconComponent = FavoriteIcon;
+              break;
             case "Search":
-              iconName = "search-outline"
-              break
+              IconComponent = SearchIcon;
+              break;
             case "Profile":
-              iconName = "person-outline"
-              break
+              IconComponent = ProfileIcon;
+              break;
             default:
-              iconName = "help-outline"
+              IconComponent = HomeIcon;
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />
+          return <IconComponent width={24} height={24} fill={color} />;
         },
       })}
     >
@@ -49,7 +57,7 @@ const MainTabs = () => {
       <Tab.Screen name="Search" component={SearchStack} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
-  )
-}
+  );
+};
 
-export default MainTabs
+export default MainTabs;

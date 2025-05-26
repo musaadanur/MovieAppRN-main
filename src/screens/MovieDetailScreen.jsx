@@ -14,14 +14,9 @@ import {
 import { useRoute } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMovieDetails, fetchMovieCredits } from "../services/api";
-import {
-  addLikedMovie,
-  getLikedMovies,
-  removeLikedMovie,
-} from "../services/firebase";
+import { addLikedMovie, removeLikedMovie } from "../services/firebase";
 import { auth } from "../services/firebase";
 import colors from "../theme/colors";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import {
   setSelectedMovie,
   fetchMoviesStart,
@@ -32,6 +27,7 @@ import {
   addToFavorites,
   removeFromFavorites,
 } from "../state/slices/favoriteSlice";
+import FavoriteIcon from "../assets/favorite.svg";
 
 let lastTap = 0;
 
@@ -39,21 +35,25 @@ const MovieDetailScreen = () => {
   const [loading, setLoading] = useState(true);
   const [cast, setCast] = useState([]);
   const dispatch = useDispatch();
+  const route = useRoute();
+  const { movieId } = route.params;
+
   const { selectedMovie: movie } = useSelector((state) => state.movies);
   const { favorites } = useSelector((state) => state.favorites);
   const liked = movie ? favorites.some((fav) => fav.id === movie.id) : false;
-
-  const route = useRoute();
-  const { movieId } = route.params;
 
   useEffect(() => {
     const loadDetails = async () => {
       try {
         dispatch(fetchMoviesStart());
-        const data = await fetchMovieDetails(movieId);
-        dispatch(setSelectedMovie(data));
+
+        // Her durumda API'den detaylı veriyi çek
+        const movieData = await fetchMovieDetails(movieId);
+        dispatch(setSelectedMovie(movieData));
+
         const credits = await fetchMovieCredits(movieId);
         setCast(credits.cast?.slice(0, 10) || []);
+
         dispatch(fetchMoviesSuccess({ results: [], page: 1, total_pages: 1 }));
       } catch (error) {
         console.error("Movie detail error:", error);
@@ -64,7 +64,7 @@ const MovieDetailScreen = () => {
     };
 
     loadDetails();
-  }, []);
+  }, [movieId]);
 
   const handleLike = async () => {
     const uid = auth.currentUser?.uid;
@@ -80,7 +80,7 @@ const MovieDetailScreen = () => {
           title: movie.title,
           poster_path: movie.poster_path,
           release_date: movie.release_date,
-          genre_ids: movie.genres?.map((g) => g.id) || [],
+          genre_ids: movie.genre_ids || [],
           vote_average: movie.vote_average,
         };
         await addLikedMovie(uid, movieData);
@@ -119,10 +119,10 @@ const MovieDetailScreen = () => {
             style={styles.image}
           />
           <TouchableOpacity style={styles.heartIcon} onPress={handleLike}>
-            <Ionicons
-              name={liked ? "heart" : "heart-outline"}
-              size={32}
-              color={colors.secondary}
+            <FavoriteIcon
+              width={28}
+              height={28}
+              fill={liked ? colors.secondary : colors.tabInactive}
             />
           </TouchableOpacity>
           {liked && <Text style={styles.likedText}>Bu filmi beğendin</Text>}
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 32,
     right: 16,
-    backgroundColor: "#00000080",
+    backgroundColor: "#00000040",
     borderRadius: 24,
     padding: 6,
   },

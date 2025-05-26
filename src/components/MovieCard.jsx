@@ -1,7 +1,9 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import colors from "../theme/colors";
+
+// SVG ikon
+import FavoriteIcon from "../assets/favorite.svg";
 
 const MovieCard = ({ movie, liked, onToggleLike, onPress }) => {
   return (
@@ -18,10 +20,10 @@ const MovieCard = ({ movie, liked, onToggleLike, onPress }) => {
         <View style={styles.topRight}>
           {liked && <Text style={styles.likedText}>Bu filmi beğendin</Text>}
           <TouchableOpacity onPress={onToggleLike} style={styles.heartIcon}>
-            <Ionicons
-              name={liked ? "heart" : "heart-outline"}
-              size={20}
-              color={colors.secondary}
+            <FavoriteIcon
+              width={20}
+              height={20}
+              fill={liked ? colors.secondary : colors.tabInactive}
             />
           </TouchableOpacity>
         </View>
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   heartIcon: {
-    backgroundColor: "#00000080",
+    backgroundColor: "#00000061",
     borderRadius: 14,
     padding: 4,
     marginBottom: 4,

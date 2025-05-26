@@ -186,7 +186,10 @@ const FavoritesScreen = ({ navigation }) => {
               movie={item}
               liked={true}
               onPress={() =>
-                navigation.navigate("MovieDetail", { movie: item })
+                navigation.navigate("MovieDetail", {
+                  movieId: item.id,
+                  movie: item,
+                })
               }
               onToggleLike={() => handleUnlike(item.id)}
             />

@@ -8,7 +8,7 @@ import { ActivityIndicator, View } from "react-native";
 import colors from "../theme/colors";
 
 const RootNavigator = () => {
-  const [user, setUser] = useState(undefined); 
+  const [user, setUser] = useState(undefined);
   const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {

@@ -1,0 +1,1 @@
+/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/build/intermediates/cxx/Debug/146x6g5c/obj/x86_64

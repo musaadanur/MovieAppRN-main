@@ -1,3 +1,7 @@
-node_modules
-node_modules
-node_modules
+node_modules/
+android/app/build/
+ios/build/
+*.apk
+*.keystore
+.DS_Store
+*.log

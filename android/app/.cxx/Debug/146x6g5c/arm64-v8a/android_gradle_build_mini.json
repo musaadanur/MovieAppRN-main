@@ -7,7 +7,6 @@
     "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt",
     "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-screens/android/src/main/jni/CMakeLists.txt",
     "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-svg/android/src/main/jni/CMakeLists.txt",
-    "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/CMakeLists.txt",
     "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native/ReactAndroid/cmake-utils/default-app-setup/CMakeLists.txt"
   ],
   "cleanCommandsComponents": [
@@ -27,11 +26,6 @@
   "libraries": {
     "react_codegen_rnclipboard::@6385240493dfcaf22ab7": {
       "artifactName": "react_codegen_rnclipboard",
-      "abi": "arm64-v8a",
-      "runtimeFiles": []
-    },
-    "react_codegen_RNVectorIconsSpec::@479809fae146501fd34d": {
-      "artifactName": "react_codegen_RNVectorIconsSpec",
       "abi": "arm64-v8a",
       "runtimeFiles": []
     },

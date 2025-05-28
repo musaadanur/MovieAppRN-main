@@ -246,31 +246,6 @@ if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   file(TOUCH_NOCREATE "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/x86_64/CMakeFiles/cmake.verify_globs")
 endif()
 
-# react_codegen_SRCS at /Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/CMakeLists.txt:9 (file)
-file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/*.cpp")
-set(OLD_GLOB
-  "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/RNVectorIconsSpec-generated.cpp"
-  )
-if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
-  message("-- GLOB mismatch!")
-  file(TOUCH_NOCREATE "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/x86_64/CMakeFiles/cmake.verify_globs")
-endif()
-
-# react_codegen_SRCS at /Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/CMakeLists.txt:9 (file)
-file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/react/renderer/components/RNVectorIconsSpec/*.cpp")
-set(OLD_GLOB
-  "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/react/renderer/components/RNVectorIconsSpec/ComponentDescriptors.cpp"
-  "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/react/renderer/components/RNVectorIconsSpec/EventEmitters.cpp"
-  "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/react/renderer/components/RNVectorIconsSpec/Props.cpp"
-  "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/react/renderer/components/RNVectorIconsSpec/RNVectorIconsSpecJSI-generated.cpp"
-  "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/react/renderer/components/RNVectorIconsSpec/ShadowNodes.cpp"
-  "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/react/renderer/components/RNVectorIconsSpec/States.cpp"
-  )
-if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
-  message("-- GLOB mismatch!")
-  file(TOUCH_NOCREATE "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/x86_64/CMakeFiles/cmake.verify_globs")
-endif()
-
 # override_cpp_SRC at /Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native/ReactAndroid/cmake-utils/ReactNative-application.cmake:42 (file)
 # input_SRC at /Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native/ReactAndroid/cmake-utils/ReactNative-application.cmake:47 (file)
 file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native/ReactAndroid/cmake-utils/default-app-setup/*.cpp")

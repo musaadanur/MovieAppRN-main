@@ -51,7 +51,6 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/arm64-v8a/safeareacontext_autolinked_build/cmake_install.cmake")
   include("/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/arm64-v8a/rnscreens_autolinked_build/cmake_install.cmake")
   include("/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/arm64-v8a/rnsvg_autolinked_build/cmake_install.cmake")
-  include("/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/arm64-v8a/RNVectorIconsSpec_autolinked_build/cmake_install.cmake")
 
 endif()
 

@@ -1,7 +1,20 @@
-node_modules/
+# Android
 android/app/build/
+android/app/build/**/*.so
+android/app/build/**/*.apk
+android/app/build/**/*.bin
+android/build/
+
+# iOS
 ios/build/
+ios/Pods/
+
+# Node
+node_modules/
+
+# Diğer
 *.apk
 *.keystore
-.DS_Store
 *.log
+.DS_Store
+.env

@@ -49,8 +49,6 @@
 #import "rnscreensJSI.h"
 #import "rnsvg/rnsvg.h"
 #import "rnsvgJSI.h"
-#import "RNVectorIconsSpec/RNVectorIconsSpec.h"
-#import "RNVectorIconsSpecJSI.h"
 #import "safeareacontext/safeareacontext.h"
 #import "safeareacontextJSI.h"
 

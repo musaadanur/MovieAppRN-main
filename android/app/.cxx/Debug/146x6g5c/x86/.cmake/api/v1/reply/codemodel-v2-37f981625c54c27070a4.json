@@ -14,8 +14,7 @@
 						4,
 						5,
 						6,
-						7,
-						8
+						7
 					],
 					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
@@ -41,7 +40,7 @@
 					"source" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/@react-native-async-storage/async-storage/android/build/generated/source/codegen/jni",
 					"targetIndexes" : 
 					[
-						2
+						1
 					]
 				},
 				{
@@ -56,7 +55,7 @@
 					"source" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/@react-native-clipboard/clipboard/android/build/generated/source/codegen/jni",
 					"targetIndexes" : 
 					[
-						3
+						2
 					]
 				},
 				{
@@ -71,7 +70,7 @@
 					"source" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-gesture-handler/android/build/generated/source/codegen/jni",
 					"targetIndexes" : 
 					[
-						4
+						3
 					]
 				},
 				{
@@ -86,7 +85,7 @@
 					"source" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-reanimated/android/build/generated/source/codegen/jni",
 					"targetIndexes" : 
 					[
-						5
+						4
 					]
 				},
 				{
@@ -101,7 +100,7 @@
 					"source" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-safe-area-context/android/src/main/jni",
 					"targetIndexes" : 
 					[
-						8
+						7
 					]
 				},
 				{
@@ -116,7 +115,7 @@
 					"source" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-screens/android/src/main/jni",
 					"targetIndexes" : 
 					[
-						6
+						5
 					]
 				},
 				{
@@ -131,22 +130,7 @@
 					"source" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-svg/android/src/main/jni",
 					"targetIndexes" : 
 					[
-						7
-					]
-				},
-				{
-					"build" : "RNVectorIconsSpec_autolinked_build",
-					"jsonFile" : "directory-RNVectorIconsSpec_autolinked_build-Debug-3e1bc88e0d89ee1c3bd1.json",
-					"minimumCMakeVersion" : 
-					{
-						"string" : "3.13"
-					},
-					"parentIndex" : 0,
-					"projectIndex" : 0,
-					"source" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni",
-					"targetIndexes" : 
-					[
-						1
+						6
 					]
 				}
 			],
@@ -163,8 +147,7 @@
 						4,
 						5,
 						6,
-						7,
-						8
+						7
 					],
 					"name" : "appmodules",
 					"targetIndexes" : 
@@ -176,8 +159,7 @@
 						4,
 						5,
 						6,
-						7,
-						8
+						7
 					]
 				}
 			],
@@ -186,63 +168,56 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "appmodules::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-appmodules-Debug-463f10795067cc38c4d7.json",
+					"jsonFile" : "target-appmodules-Debug-f5f03e360a295268ea8f.json",
 					"name" : "appmodules",
-					"projectIndex" : 0
-				},
-				{
-					"directoryIndex" : 8,
-					"id" : "react_codegen_RNVectorIconsSpec::@479809fae146501fd34d",
-					"jsonFile" : "target-react_codegen_RNVectorIconsSpec-Debug-2b55f30a8916db90defc.json",
-					"name" : "react_codegen_RNVectorIconsSpec",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 1,
 					"id" : "react_codegen_rnasyncstorage::@1596841e19ec5b9eeffe",
-					"jsonFile" : "target-react_codegen_rnasyncstorage-Debug-122d98897364a81cd8aa.json",
+					"jsonFile" : "target-react_codegen_rnasyncstorage-Debug-d709658732b5534dac11.json",
 					"name" : "react_codegen_rnasyncstorage",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 2,
 					"id" : "react_codegen_rnclipboard::@6385240493dfcaf22ab7",
-					"jsonFile" : "target-react_codegen_rnclipboard-Debug-fd320584570a06b9820b.json",
+					"jsonFile" : "target-react_codegen_rnclipboard-Debug-43df9ba7f84ab7a1b2db.json",
 					"name" : "react_codegen_rnclipboard",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 3,
 					"id" : "react_codegen_rngesturehandler_codegen::@39f233abcd2c728bc6ec",
-					"jsonFile" : "target-react_codegen_rngesturehandler_codegen-Debug-d7c2cb196f04f88457cf.json",
+					"jsonFile" : "target-react_codegen_rngesturehandler_codegen-Debug-1b286c16f8d4303edd81.json",
 					"name" : "react_codegen_rngesturehandler_codegen",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 4,
 					"id" : "react_codegen_rnreanimated::@8afabad14bfffa3f8b9a",
-					"jsonFile" : "target-react_codegen_rnreanimated-Debug-e0c11d0dbcdef8cda377.json",
+					"jsonFile" : "target-react_codegen_rnreanimated-Debug-2eb867efba6a99782aee.json",
 					"name" : "react_codegen_rnreanimated",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 6,
 					"id" : "react_codegen_rnscreens::@25bcbd507e98d3a854ad",
-					"jsonFile" : "target-react_codegen_rnscreens-Debug-fbfb8013686709c97971.json",
+					"jsonFile" : "target-react_codegen_rnscreens-Debug-fa1600f2af0fa87dbc9b.json",
 					"name" : "react_codegen_rnscreens",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 7,
 					"id" : "react_codegen_rnsvg::@4f40eb209d0c0b4a3b65",
-					"jsonFile" : "target-react_codegen_rnsvg-Debug-c27d06e892676700e3a1.json",
+					"jsonFile" : "target-react_codegen_rnsvg-Debug-357812b1210e189f594c.json",
 					"name" : "react_codegen_rnsvg",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 5,
 					"id" : "react_codegen_safeareacontext::@7984cd80db47aa7b952a",
-					"jsonFile" : "target-react_codegen_safeareacontext-Debug-d15d821f7d29eff11809.json",
+					"jsonFile" : "target-react_codegen_safeareacontext-Debug-ffeb985e7153882f7c40.json",
 					"name" : "react_codegen_safeareacontext",
 					"projectIndex" : 0
 				}
@@ -252,7 +227,7 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/armeabi-v7a",
+		"build" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/x86",
 		"source" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native/ReactAndroid/cmake-utils/default-app-setup"
 	},
 	"version" : 

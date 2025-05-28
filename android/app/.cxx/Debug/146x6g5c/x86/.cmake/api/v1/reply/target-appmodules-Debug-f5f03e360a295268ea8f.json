@@ -276,14 +276,6 @@
 					"path" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-svg/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/rnsvg"
 				},
 				{
-					"backtrace" : 4,
-					"path" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/."
-				},
-				{
-					"backtrace" : 4,
-					"path" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/react/renderer/components/RNVectorIconsSpec"
-				},
-				{
 					"backtrace" : 5,
 					"isSystem" : true,
 					"path" : "/Users/musaadanur/.gradle/caches/8.13/transforms/72cde7dc85b5006383f56c98fcfedfa5/transformed/fbjni-0.7.0/prefab/modules/fbjni/include"
@@ -340,10 +332,6 @@
 		{
 			"backtrace" : 4,
 			"id" : "react_codegen_rnsvg::@4f40eb209d0c0b4a3b65"
-		},
-		{
-			"backtrace" : 4,
-			"id" : "react_codegen_RNVectorIconsSpec::@479809fae146501fd34d"
 		}
 	],
 	"id" : "appmodules::@6890427a1f51a3e7e1df",
@@ -444,14 +432,7 @@
 				26,
 				27,
 				28,
-				29,
-				30,
-				31,
-				32,
-				33,
-				34,
-				35,
-				36
+				29
 			]
 		}
 	],
@@ -635,48 +616,6 @@
 			"backtrace" : 4,
 			"isGenerated" : true,
 			"path" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/x86/rnreanimated_autolinked_build/CMakeFiles/react_codegen_rnreanimated.dir/rnreanimated-generated.cpp.o",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 4,
-			"isGenerated" : true,
-			"path" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/x86/RNVectorIconsSpec_autolinked_build/CMakeFiles/react_codegen_RNVectorIconsSpec.dir/RNVectorIconsSpec-generated.cpp.o",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 4,
-			"isGenerated" : true,
-			"path" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/x86/RNVectorIconsSpec_autolinked_build/CMakeFiles/react_codegen_RNVectorIconsSpec.dir/react/renderer/components/RNVectorIconsSpec/ComponentDescriptors.cpp.o",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 4,
-			"isGenerated" : true,
-			"path" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/x86/RNVectorIconsSpec_autolinked_build/CMakeFiles/react_codegen_RNVectorIconsSpec.dir/react/renderer/components/RNVectorIconsSpec/EventEmitters.cpp.o",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 4,
-			"isGenerated" : true,
-			"path" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/x86/RNVectorIconsSpec_autolinked_build/CMakeFiles/react_codegen_RNVectorIconsSpec.dir/react/renderer/components/RNVectorIconsSpec/Props.cpp.o",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 4,
-			"isGenerated" : true,
-			"path" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/x86/RNVectorIconsSpec_autolinked_build/CMakeFiles/react_codegen_RNVectorIconsSpec.dir/react/renderer/components/RNVectorIconsSpec/RNVectorIconsSpecJSI-generated.cpp.o",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 4,
-			"isGenerated" : true,
-			"path" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/x86/RNVectorIconsSpec_autolinked_build/CMakeFiles/react_codegen_RNVectorIconsSpec.dir/react/renderer/components/RNVectorIconsSpec/ShadowNodes.cpp.o",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 4,
-			"isGenerated" : true,
-			"path" : "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/android/app/.cxx/Debug/146x6g5c/x86/RNVectorIconsSpec_autolinked_build/CMakeFiles/react_codegen_RNVectorIconsSpec.dir/react/renderer/components/RNVectorIconsSpec/States.cpp.o",
 			"sourceGroupIndex" : 1
 		}
 	],

@@ -4,7 +4,6 @@ import {
   FlatList,
   ActivityIndicator,
   StyleSheet,
-  ToastAndroid,
   Platform,
   Text,
   TouchableOpacity,
@@ -176,13 +175,6 @@ const SearchScreen = () => {
       } else {
         await addLikedMovie(user.uid, movie);
         dispatch(addToFavorites(movie));
-      }
-
-      if (Platform.OS === "android") {
-        ToastAndroid.show(
-          isLiked ? "Beğeni kaldırıldı" : "Film beğenildi",
-          ToastAndroid.SHORT
-        );
       }
     } catch (error) {
       console.error("Toggle Like Error:", error);

@@ -18,12 +18,7 @@ const authSlice = createSlice({
       state.loading = false;
       if (action.payload) {
         const { uid, email, emailVerified, isAnonymous } = action.payload;
-        state.user = {
-          uid,
-          email,
-          emailVerified,
-          isAnonymous,
-        };
+        state.user = { uid, email, emailVerified, isAnonymous };
       } else {
         state.user = null;
       }
@@ -45,12 +40,7 @@ const authSlice = createSlice({
       state.loading = false;
       if (action.payload) {
         const { uid, email, emailVerified, isAnonymous } = action.payload;
-        state.user = {
-          uid,
-          email,
-          emailVerified,
-          isAnonymous,
-        };
+        state.user = { uid, email, emailVerified, isAnonymous };
       } else {
         state.user = null;
       }
@@ -58,6 +48,15 @@ const authSlice = createSlice({
     registerFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
+    },
+
+    setUser: (state, action) => {
+      if (action.payload) {
+        const { uid, email, emailVerified, isAnonymous } = action.payload;
+        state.user = { uid, email, emailVerified, isAnonymous };
+      } else {
+        state.user = null;
+      }
     },
   },
 });
@@ -70,6 +69,7 @@ export const {
   registerStart,
   registerSuccess,
   registerFailure,
+  setUser,
 } = authSlice.actions;
 
 export default authSlice.reducer;

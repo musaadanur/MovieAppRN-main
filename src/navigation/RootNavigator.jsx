@@ -1,26 +1,55 @@
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import { ActivityIndicator, View } from "react-native";
+import { useDispatch } from "react-redux";
+
 import AuthStack from "./AuthStack";
 import MainTabs from "./MainTabs";
-import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../services/firebase";
-import { ActivityIndicator, View } from "react-native";
 import colors from "../theme/colors";
+import { setUser } from "../state/slices/authSlice";
 
 const RootNavigator = () => {
-  const [user, setUser] = useState(undefined);
-  const [initializing, setInitializing] = useState(true);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      if (initializing) setInitializing(false);
+    const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
+      if (firebaseUser) {
+        dispatch(
+          setUser({
+            uid: firebaseUser.uid,
+            email: firebaseUser.email,
+            emailVerified: firebaseUser.emailVerified,
+            isAnonymous: firebaseUser.isAnonymous,
+          })
+        );
+        setIsLoggedIn(true);
+      } else {
+        dispatch(setUser(null));
+        setIsLoggedIn(false);
+      }
+
+      setCheckingAuth(false);
     });
 
-    return unsubscribe;
-  }, [initializing]);
+    // Fallback kontrol (bazı cihazlarda onAuthStateChanged geç gelir)
+    const fallbackCheck = setTimeout(() => {
+      if (!auth.currentUser && checkingAuth) {
+        dispatch(setUser(null));
+        setIsLoggedIn(false);
+        setCheckingAuth(false);
+      }
+    }, 3000);
 
-  if (initializing) {
+    return () => {
+      unsubscribe();
+      clearTimeout(fallbackCheck);
+    };
+  }, []);
+
+  if (checkingAuth) {
     return (
       <View
         style={{
@@ -37,7 +66,7 @@ const RootNavigator = () => {
 
   return (
     <NavigationContainer>
-      {user ? <MainTabs /> : <AuthStack />}
+      {isLoggedIn ? <MainTabs /> : <AuthStack />}
     </NavigationContainer>
   );
 };

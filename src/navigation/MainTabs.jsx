@@ -6,7 +6,6 @@ import ProfileScreen from "../screens/ProfileScreen";
 import FavoritesStack from "./FavoritesStack";
 import colors from "../theme/colors";
 
-// SVG ikonlar (fill renklerini props ile kontrol edeceğiz)
 import HomeIcon from "../assets/home.svg";
 import SearchIcon from "../assets/search.svg";
 import ProfileIcon from "../assets/profile.svg";

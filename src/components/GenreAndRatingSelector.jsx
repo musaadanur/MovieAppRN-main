@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Modal, FlatList, StyleSheet } from "react-native";
 import colors from "../theme/colors";
 import { fetchGenres } from "../services/api";
-import Button from "./Button"; 
+import Button from "./Button";
 
 const ratings = ["9+", "8+", "7+", "6+", "5+", "4+", "3+", "2+", "1+"];
 
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 12,
     marginHorizontal: 14,
-    marginBottom: 16,
+    marginBottom: 8,
   },
   modalBackground: {
     flex: 1,

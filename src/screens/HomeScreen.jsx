@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, ActivityIndicator, View, Alert } from "react-native";
+import {
+  Text,
+  FlatList,
+  ActivityIndicator,
+  View,
+  Alert,
+  StyleSheet,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPopularMovies } from "../services/api";
 import ScreenWrapper from "../components/ScreenWrapper";
@@ -25,8 +32,6 @@ import {
   addToFavorites,
   removeFromFavorites,
 } from "../state/slices/favoriteSlice";
-
-const ITEMS_PER_PAGE = 20;
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -118,7 +123,6 @@ const HomeScreen = () => {
       if (isLiked) {
         await removeLikedMovie(uid, movie.id);
         dispatch(removeFromFavorites(movie.id));
-        Alert.alert("Başarılı", "Film favorilerden kaldırıldı");
       } else {
         const movieData = {
           id: movie.id,
@@ -130,7 +134,6 @@ const HomeScreen = () => {
         };
         await addLikedMovie(uid, movieData);
         dispatch(addToFavorites(movieData));
-        Alert.alert("Başarılı", "Film favorilere eklendi");
       }
     } catch (error) {
       console.error("Toggle Like Error:", error);

@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
   FlatList,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native"; // updated
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMovieDetails, fetchMovieCredits } from "../services/api";
 import { addLikedMovie, removeLikedMovie } from "../services/firebase";
@@ -36,6 +36,7 @@ const MovieDetailScreen = () => {
   const [cast, setCast] = useState([]);
   const dispatch = useDispatch();
   const route = useRoute();
+  const navigation = useNavigation(); // added
   const { movieId } = route.params;
 
   const { selectedMovie: movie } = useSelector((state) => state.movies);
@@ -47,7 +48,6 @@ const MovieDetailScreen = () => {
       try {
         dispatch(fetchMoviesStart());
 
-        // Her durumda API'den detaylı veriyi çek
         const movieData = await fetchMovieDetails(movieId);
         dispatch(setSelectedMovie(movieData));
 
@@ -118,6 +118,14 @@ const MovieDetailScreen = () => {
             }}
             style={styles.image}
           />
+
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.backButtonText}>Geri</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.heartIcon} onPress={handleLike}>
             <FavoriteIcon
               width={28}
@@ -125,6 +133,7 @@ const MovieDetailScreen = () => {
               fill={liked ? colors.secondary : colors.tabInactive}
             />
           </TouchableOpacity>
+
           {liked && <Text style={styles.likedText}>Bu filmi beğendin</Text>}
         </View>
       </TouchableWithoutFeedback>
@@ -179,6 +188,21 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 400,
   },
+  backButton: {
+    position: "absolute",
+    top: 48,
+    left: 16,
+    backgroundColor: "#00000060",
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    zIndex: 10,
+  },
+  backButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "300",
+  },
   heartIcon: {
     position: "absolute",
     bottom: 32,
@@ -197,7 +221,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 12,
-    fontWeight: 400,
+    fontWeight: "400",
   },
   content: {
     padding: 16,

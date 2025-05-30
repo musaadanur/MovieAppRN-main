@@ -43,7 +43,7 @@ setPersistence(auth, getReactNativePersistence(AsyncStorage)).catch((error) => {
   console.error("Error setting persistence:", error);
 });
 
-// ✅ Kullanıcı kaydı
+// Kullanıcı kaydı
 export const registerUser = async (email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
@@ -69,7 +69,7 @@ export const registerUser = async (email, password) => {
   }
 };
 
-// ✅ Kullanıcı girişi
+// Kullanıcı girişi
 export const loginUser = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
@@ -88,7 +88,7 @@ export const loginUser = async (email, password) => {
   }
 };
 
-// ✅ Oturum kapatma
+// Oturum kapatma
 export const logoutUser = async () => {
   try {
     await signOut(auth);
@@ -98,7 +98,7 @@ export const logoutUser = async () => {
   }
 };
 
-// ✅ Hesabı kalıcı olarak sil
+// Hesabı kalıcı olarak sil
 export const deleteUserAccount = async () => {
   const user = auth.currentUser;
   if (!user) return;
@@ -112,7 +112,7 @@ export const deleteUserAccount = async () => {
   }
 };
 
-// ✅ Beğenilen filmleri al
+// Beğenilen filmleri al
 export const getLikedMovies = async (uid) => {
   try {
     console.log("Fetching liked movies for user:", uid);
@@ -144,25 +144,22 @@ export const getLikedMovies = async (uid) => {
   }
 };
 
-// ✅ Film beğen
+// Film beğen
 export const addLikedMovie = async (uid, movie) => {
   try {
     console.log("Adding movie to favorites:", movie);
 
-    // Önce users koleksiyonunda kullanıcı dokümanını kontrol et
     const userDocRef = doc(db, "users", uid);
     const userDoc = await getDoc(userDocRef);
 
     if (!userDoc.exists()) {
       console.log("User document does not exist, creating...");
-      // Kullanıcı dokümanını oluştur
       await setDoc(userDocRef, {
         email: auth.currentUser?.email,
         createdAt: new Date().toISOString(),
       });
     }
 
-    // Filmi beğenilenlere ekle
     const movieRef = doc(db, "users", uid, "liked_movies", movie.id.toString());
     await setDoc(movieRef, {
       ...movie,
@@ -175,7 +172,7 @@ export const addLikedMovie = async (uid, movie) => {
   }
 };
 
-// ✅ Film beğenisini kaldır
+// Film beğenisini kaldır
 export const removeLikedMovie = async (uid, movieId) => {
   try {
     console.log("Removing movie from favorites:", movieId);

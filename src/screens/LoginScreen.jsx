@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Text, Alert, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, Alert, TouchableOpacity, StyleSheet, View } from "react-native";
 import { useDispatch } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 import InputField from "../components/InputField";
 import Button from "../components/Button";
 import ScreenWrapper from "../components/ScreenWrapper";
-import { useNavigation } from "@react-navigation/native";
 import { loginUser } from "../services/firebase";
 import colors from "../theme/colors";
 import {
@@ -29,7 +31,6 @@ const LoginScreen = () => {
       dispatch(loginStart());
       const user = await loginUser(email, password);
 
-      // Serialize Firebase user object
       const serializedUser = {
         uid: user.uid,
         email: user.email,
@@ -47,35 +48,48 @@ const LoginScreen = () => {
 
   return (
     <ScreenWrapper>
-      <Text style={styles.title}>Login</Text>
+      <KeyboardAwareScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        enableOnAndroid={true}
+        extraScrollHeight={20}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.container}>
+          <Text style={styles.title}>Login</Text>
 
-      <InputField
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
+          <InputField
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+          />
 
-      <InputField
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+          <InputField
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
 
-      <Button title="Login" onPress={handleLogin} type="primary" />
+          <Button title="Login" onPress={handleLogin} type="primary" />
 
-      <TouchableOpacity onPress={() => navigation.popTo("Register")}>
-        <Text style={styles.link}>
-          Don't have an account?{" "}
-          <Text style={{ color: colors.secondary }}>Register</Text>
-        </Text>
-      </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.popTo("Register")}>
+            <Text style={styles.link}>
+              Don't have an account?{" "}
+              <Text style={{ color: colors.secondary }}>Register</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
     </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+  },
   title: {
     color: "#fff",
     fontSize: 24,

@@ -87,7 +87,7 @@
       "platforms": {
         "ios": {
           "podspecPath": "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-reanimated/RNReanimated.podspec",
-          "version": "3.17.5",
+          "version": "3.18.0",
           "configurations": [],
           "scriptPhases": []
         },
@@ -140,7 +140,7 @@
       "platforms": {
         "ios": {
           "podspecPath": "/Users/musaadanur/Desktop/patikaMobileBootcamp/reactnative-cli-projeler/MovieAppRN-main/node_modules/react-native-screens/RNScreens.podspec",
-          "version": "4.11.0",
+          "version": "4.11.1",
           "configurations": [],
           "scriptPhases": []
         },

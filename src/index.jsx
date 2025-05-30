@@ -1,20 +1,24 @@
 import React from "react";
-import { StatusBar, View } from "react-native";
+import { StatusBar } from "react-native";
 import { Provider } from "react-redux";
-import { store } from "./state/store";
-import colors from "./theme/colors";
-import RootNavigator from "./navigation/RootNavigator";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-export default function App() {
+import { store } from "./state/store";
+import RootNavigator from "./navigation/RootNavigator";
+import colors from "./theme/colors";
+
+const App = () => {
   return (
     <Provider store={store}>
-      <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <SafeAreaProvider>
         <StatusBar
           barStyle="light-content"
           backgroundColor={colors.background}
         />
         <RootNavigator />
-      </View>
+      </SafeAreaProvider>
     </Provider>
   );
-}
+};
+
+export default App;

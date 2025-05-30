@@ -1,6 +1,5 @@
 import React from "react";
 import { TextInput, StyleSheet } from "react-native";
-import colors from "../theme/colors";
 
 const InputField = ({
   placeholder,

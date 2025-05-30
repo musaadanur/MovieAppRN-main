@@ -2,6 +2,8 @@
 
 React Native ile geliştirilmiş, TMDB API kullanarak film arama, listeleme ve favorilere ekleme özellikleri sunan mobil uygulama.
 
+[![Watch the video](https://img.youtube.com/vi/VqtrBfHcd3A/0.jpg)](https://www.youtube.com/watch?v=VqtrBfHcd3A)
+
 ## Özellikler
 
 - Film arama ve listeleme

@@ -34,7 +34,6 @@ const RootNavigator = () => {
       setCheckingAuth(false);
     });
 
-    // Fallback kontrol (bazı cihazlarda onAuthStateChanged geç gelir)
     const fallbackCheck = setTimeout(() => {
       if (!auth.currentUser && checkingAuth) {
         dispatch(setUser(null));

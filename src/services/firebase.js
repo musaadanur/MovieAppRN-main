@@ -38,7 +38,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Set persistence to use AsyncStorage
 setPersistence(auth, getReactNativePersistence(AsyncStorage)).catch((error) => {
   console.error("Error setting persistence:", error);
 });
@@ -117,20 +116,18 @@ export const getLikedMovies = async (uid) => {
   try {
     console.log("Fetching liked movies for user:", uid);
 
-    // Önce users koleksiyonunda kullanıcı dokümanını kontrol et
     const userDocRef = doc(db, "users", uid);
     const userDoc = await getDoc(userDocRef);
 
     if (!userDoc.exists()) {
       console.log("User document does not exist, creating...");
-      // Kullanıcı dokümanını oluştur
+     
       await setDoc(userDocRef, {
         email: auth.currentUser?.email,
         createdAt: new Date().toISOString(),
       });
     }
 
-    // Beğenilen filmleri al
     const likedMoviesRef = collection(db, "users", uid, "liked_movies");
     const snapshot = await getDocs(likedMoviesRef);
     const movies = snapshot.docs.map((doc) => doc.data());

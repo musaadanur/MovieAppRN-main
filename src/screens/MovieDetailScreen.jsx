@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
   FlatList,
 } from "react-native";
-import { useRoute, useNavigation } from "@react-navigation/native"; // updated
+import { useRoute, useNavigation } from "@react-navigation/native"; 
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMovieDetails, fetchMovieCredits } from "../services/api";
 import { addLikedMovie, removeLikedMovie } from "../services/firebase";
@@ -36,7 +36,7 @@ const MovieDetailScreen = () => {
   const [cast, setCast] = useState([]);
   const dispatch = useDispatch();
   const route = useRoute();
-  const navigation = useNavigation(); // added
+  const navigation = useNavigation(); 
   const { movieId } = route.params;
 
   const { selectedMovie: movie } = useSelector((state) => state.movies);

@@ -1,8 +1,6 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import colors from "../theme/colors";
-
-// SVG ikon
 import FavoriteIcon from "../assets/favorite.svg";
 
 const MovieCard = ({ movie, liked, onToggleLike, onPress }) => {

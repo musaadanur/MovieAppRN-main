@@ -1,7 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import Button from "./Button";
-import colors from "../theme/colors";
 
 const SearchFilterSelector = ({ mode, setMode }) => {
   return (

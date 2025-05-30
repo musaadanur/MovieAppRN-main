@@ -4,8 +4,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useDispatch, useSelector } from "react-redux";
 import { setupAuthListener } from "../services/firebase";
 import { loginSuccess, logout } from "../state/slices/authSlice";
-
-// Screens
 import HomeScreen from "../screens/HomeScreen";
 import MovieDetailScreen from "../screens/MovieDetailScreen";
 import SearchScreen from "../screens/SearchScreen";

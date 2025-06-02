@@ -91,7 +91,7 @@ export const discoverMovies = async (genreIds, minRating, page = 1) => {
     return response.data.results;
   } catch (error) {
     throw new Error(
-      error.response?.data?.message || "Film keşfi sırasında bir hata oluştu"
+      error.response?.data?.message || "Film arama sırasında bir hata oluştu"
     );
   }
 };
